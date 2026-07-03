@@ -3,7 +3,14 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,16 +32,18 @@ export const Login = () => {
     setIsSubmitting(true);
 
     try {
-      // Connect your actual endpoint here:
-      // const res = await fetch('/api/v1/auth/login', { ... })
-      
-      // Simulated API Delay & Response
       await new Promise((resolve) => setTimeout(resolve, 1200));
+
       const fakeToken = "jwt-access-token-example";
-      const fakeUser = { id: "u-secure-1", email: formData.email, name: formData.name, role:"user" };
+      const fakeUser = {
+        id: "u-secure-1",
+        email: formData.email,
+        name: formData.email.split("@")[0],
+        role: "user"
+      };
 
       login(fakeToken, fakeUser);
-      navigate ('/')
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Invalid email or password. Please try again.');
     } finally {
@@ -43,89 +52,107 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center p-4 sm:p-6 lg:p-8">
-      <Card className="w-full max-w-md shadow-lg border-muted">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold tracking-tight text-center">
-            Welcome back
+    <div className="min-h-[80vh] flex items-center justify-center px-4 bg-[#0E1733]/5">
+      <Card className="w-full max-w-md border-none shadow-xl rounded-2xl overflow-hidden">
+
+        {/* Header */}
+        <CardHeader className="text-center space-y-1 bg-[#0E1733] text-white py-8">
+          <CardTitle className="text-2xl font-bold">
+            Welcome Back
           </CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access your account
+          <CardDescription className="text-gray-300">
+            Sign in to continue shopping at Wa-Morgan
           </CardDescription>
         </CardHeader>
-        
+
+        {/* Form */}
         <form onSubmit={handleSubmit}>
-          <CardContent className="grid gap-4">
+          <CardContent className="grid gap-5 p-6">
+
             {error && (
-              <div className="p-3 text-sm font-medium text-destructive bg-destructive/10 rounded-md border border-destructive/20">
+              <div className="p-3 text-sm font-medium text-red-600 bg-red-50 rounded-md border border-red-200">
                 {error}
               </div>
             )}
-            
+
+            {/* Email */}
             <div className="grid gap-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label>Email address</Label>
               <Input
-                id="email"
                 name="email"
                 type="email"
                 placeholder="name@example.com"
-                autoComplete="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="w-full"
+                className="focus-visible:ring-[#F98603]"
               />
             </div>
-            
+
+            {/* Password */}
             <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#forgot" className="text-xs text-primary hover:underline font-medium">
+              <div className="flex justify-between items-center">
+                <Label>Password</Label>
+                <a
+                  href="#forgot"
+                  className="text-xs text-[#F98603] hover:underline"
+                >
                   Forgot password?
                 </a>
               </div>
+
               <div className="relative">
                 <Input
-                  id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
                   required
                   value={formData.password}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="pr-10"
+                  className="pr-10 focus-visible:ring-[#F98603]"
                 />
+
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F98603]"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
+
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-4 mt-2">
-            <Button type="submit" className="w-full font-medium" disabled={isSubmitting}>
+          {/* Footer */}
+          <CardFooter className="flex flex-col gap-4 p-6 pt-0">
+
+            <Button
+              type="submit"
+              className="w-full bg-[#F98603] hover:bg-[#ff9a1f] text-[#0E1733] font-semibold"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Signing In...
                 </>
               ) : (
-                'Sign In'
+                "Sign In"
               )}
             </Button>
-            
-            <p className="text-sm text-center text-muted-foreground w-full">
-              Don&apos;t have an account?{' '}
-              <a href="#register" className="font-medium text-primary hover:underline">
+
+            <p className="text-sm text-center text-gray-500">
+              Don&apos;t have an account?{" "}
+              <a
+                href="#register"
+                className="text-[#F98603] font-medium hover:underline"
+              >
                 Sign up
               </a>
             </p>
+
           </CardFooter>
         </form>
       </Card>

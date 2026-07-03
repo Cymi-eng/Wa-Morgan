@@ -15,14 +15,14 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+    <header className="sticky top-0 z-50 bg-[#0E1733] text-white border-b border-white/10 shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <ShoppingBag className="h-7 w-7" />
           <div>
-            <h1 className="text-xl font-bold">Wa-Morgan</h1>
+            <h1 className="text-xl font-bold text-[#F98603]">Wa-Morgan</h1>
             <p className="text-xs text-gray-500">
               Dress Better. Live Better.
             </p>
@@ -37,8 +37,8 @@ function Navbar() {
               to={link.path}
               className={({ isActive }) =>
                 isActive
-                  ? "font-semibold text-black border-b-2 border-black pb-1"
-                  : "text-gray-600 hover:text-black transition"
+                  ? "font-semibold text-[#F98603] border-b-2 border-[#F98603] pb-1"
+                  : "text-gray-300 hover:text-[#F98603] transition"
               }
             >
               {link.name}

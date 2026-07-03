@@ -1,11 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-// import Products from "./pages/Products";
-// import ProductDetails from "./pages/ProductDetail";
+import Home from "./pages/Home";
+import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
-// import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -15,15 +13,22 @@ function App() {
 
       <Navbar />
 
-       <Routes>
+      <Routes>
+
+        {/* Home */}
         <Route path="/" element={<Home />} />
-         {/* <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetails />} /> */}
+
+        {/* Products */}
+        <Route path="/products" element={<ProductList />} />
+
+        {/* Cart */}
         <Route path="/cart" element={<Cart />} />
-        {/* <Route path="/checkout" element={<Checkout />} />  */}
+
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-      </Routes> 
+
+      </Routes>
 
     </BrowserRouter>
   );

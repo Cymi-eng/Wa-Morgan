@@ -16,10 +16,10 @@ function ProductCard({ product }) {
   const { addToCart } = useContext(CartContext);
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-[#0E1733]/10 hover:border-[#F98603]">
 
       {/* Product Image */}
-      <div className="h-64 flex items-center justify-center bg-gray-100 p-4">
+      <div className="h-64 flex items-center justify-center bg-[#0E1733]/5 p-4">
         <img
           src={product.image}
           alt={product.title}
@@ -29,16 +29,16 @@ function ProductCard({ product }) {
 
       {/* Product Details */}
       <CardContent className="space-y-3 pt-5">
-        <h2 className="text-lg font-semibold line-clamp-2">
+        <h2 className="text-lg font-semibold line-clamp-2 text-[#0E1733]">
           {product.title}
         </h2>
 
-        <p className="text-2xl font-bold text-green-700">
+        <p className="text-2xl font-bold text-[#F98603]">
           ${product.price}
         </p>
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+          <Star className="h-4 w-4 fill-[#F98603] text-[#F98603]" />
           <span className="font-medium">{product.rating.rate}</span>
           <span>({product.rating.count} reviews)</span>
         </div>
@@ -46,19 +46,23 @@ function ProductCard({ product }) {
 
       {/* Buttons */}
       <CardFooter className="flex gap-2">
-        <Button asChild className="flex-1">
+
+        <Button
+          asChild
+          className="flex-1 bg-[#0E1733] hover:bg-[#0E1733]/90 text-white"
+        >
           <Link to={`/products/${product.id}`}>
             View Details
           </Link>
         </Button>
 
         <Button
-          variant="outline"
-          className="flex-1"
+          className="flex-1 border-[#F98603] text-[#F98603] hover:bg-[#F98603] hover:text-[#0E1733]"
           onClick={() => addToCart(product)}
         >
           Add to Cart
         </Button>
+
       </CardFooter>
 
     </Card>
