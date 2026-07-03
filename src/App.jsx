@@ -6,6 +6,7 @@ import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/register" element={<Register />} />
 
       </Routes>
+      <Footer/>
 
     </BrowserRouter>
   );
