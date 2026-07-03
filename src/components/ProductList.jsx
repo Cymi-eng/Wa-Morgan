@@ -3,62 +3,68 @@ import ProductCard from "./ProductCard";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    async function fetchProducts() {
+    const fetchProducts = async () => {
       try {
-        const response = await fetch("https://fakestoreapi.com/products");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch products.");
-        }
-
-        const data = await response.json();
-
-        // Keep only clothing products
-        const clothingProducts = data.filter(
-          (product) =>
-            product.category === "men's clothing" ||
-            product.category === "women's clothing"
-        );
-
-        setProducts(clothingProducts);
-      } catch (err) {
-        setError(err.message);
+        const res = await fetch("https://fakestoreapi.com/products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (error) {
+        console.log("Error fetching products:", error);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchProducts();
   }, []);
 
-  if (loading) {
-    return (
-      <h2 className="text-center text-xl py-10">
-        Loading products...
-      </h2>
-    );
-  }
-
-  if (error) {
-    return (
-      <h2 className="text-center text-red-600 py-10">
-        {error}
-      </h2>
-    );
-  }
+  // 🔍 SEARCH FILTER LOGIC
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-        />
-      ))}
+    <div className="max-w-7xl mx-auto px-6 py-10">
+
+      {/* PAGE TITLE */}
+      <h1 className="text-3xl font-bold text-[#0E1733] mb-6">
+        Our Products
+      </h1>
+
+      {/* SEARCH BAR */}
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full md:w-1/2 mb-8 p-3 border border-[#0E1733]/20 rounded-md focus:outline-none focus:border-[#F98603] focus:ring-1 focus:ring-[#F98603]"
+      />
+
+      {/* LOADING STATE */}
+      {loading ? (
+        <p className="text-gray-500">Loading products...</p>
+      ) : (
+        <>
+          {/* NO RESULTS */}
+          {filteredProducts.length === 0 ? (
+            <p className="text-gray-500">
+              No products found for "{search}"
+            </p>
+          ) : (
+            /* PRODUCT GRID */
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
     </div>
   );
 }
