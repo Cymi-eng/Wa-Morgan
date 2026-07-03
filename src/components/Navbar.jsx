@@ -1,8 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
-import { ShoppingBag, ShoppingCart, User } from "lucide-react";
+import { useContext } from "react";
+import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CartContext } from "../context/CartContext";
 
 function Navbar() {
+  const { cart } = useContext(CartContext);
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
@@ -45,12 +49,20 @@ function Navbar() {
         {/* Right Side */}
         <div className="flex items-center gap-3">
 
-          <Button variant="ghost" asChild>
+          {/* Cart with badge */}
+          <Button variant="ghost" asChild className="relative">
             <Link to="/cart">
-              <ShoppingCart className="h-5 w-5 mr-2" />
+              <ShoppingCart className="h-5 w-5" />
+
+              {cart.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {cart.length}
+                </span>
+              )}
             </Link>
           </Button>
 
+          {/* Auth buttons */}
           <Button variant="outline" asChild>
             <Link to="/login">
               Login
