@@ -7,6 +7,7 @@ import Cart from "./components/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
+import ProductDetails from "./pages/ProductDetail";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
 
         {/* Products */}
         <Route path="/products" element={<ProductList />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
         {/* Cart */}
         <Route path="/cart" element={<Cart />} />
