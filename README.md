@@ -85,7 +85,8 @@ src/
 
 ## Data Source
 
-Product information is retrieved from the [Fake Store API](https://fakestoreapi.com/).
+Product information is retrieved from the **DummyJSON API** (https://dummyjson.com/).
+
 
 ---
 
