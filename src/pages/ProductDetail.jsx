@@ -31,62 +31,63 @@ function ProductDetails() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
-        <Loader2 className="animate-spin text-[#F98603]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#F98603]" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="text-center mt-20 text-gray-500">
-        Product not found
-      </div>
+      <div className="text-center py-20 text-gray-500">Product not found.</div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-10">
-
-      {/* Image */}
-      <div className="bg-[#0E1733]/5 p-10 rounded-xl flex items-center justify-center">
-        <img
-          src={product.image}
-          alt={product.title}
-          className="h-[300px] object-contain"
-        />
-      </div>
-
-      {/* Details */}
-      <div>
-
-        <h1 className="text-2xl font-bold text-[#0E1733]">
-          {product.title}
-        </h1>
-
-        <p className="text-3xl font-bold text-[#F98603] mt-4">
-          ${product.price}
-        </p>
-
-        {/* Rating */}
-        <div className="flex items-center gap-2 mt-3 text-gray-600">
-          <Star className="h-4 w-4 fill-[#F98603] text-[#F98603]" />
-          <span>{product.rating.rate}</span>
-          <span>({product.rating.count} reviews)</span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        {/* Product Image */}
+        <div className="bg-[#0E1733]/5 rounded-2xl p-6 sm:p-10 flex justify-center items-center">
+          <img
+            src={product.image}
+            alt={product.title}
+            className="h-64 sm:h-80 md:h-96 object-contain transition-transform duration-300 hover:scale-105"
+          />
         </div>
 
-        {/* Description */}
-        <p className="mt-5 text-gray-600 leading-relaxed">
-          {product.description}
-        </p>
+        {/* Product Details */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0E1733] leading-tight">
+            {product.title}
+          </h1>
 
-        {/* Button */}
-        <Button
-          onClick={() => addToCart(product)}
-          className="mt-6 bg-[#0E1733] hover:bg-[#0E1733]/90 text-white w-full"
-        >
-          Add to Cart
-        </Button>
+          <p className="mt-4 text-3xl sm:text-4xl font-bold text-[#F98603]">
+            ${product.price}
+          </p>
 
+          {/* Rating */}
+          <div className="flex items-center gap-2 mt-4">
+            <Star className="h-5 w-5 fill-[#F98603] text-[#F98603]" />
+
+            <span className="font-medium">{product.rating.rate}</span>
+
+            <span className="text-gray-500">
+              ({product.rating.count} reviews)
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="mt-6 text-gray-600 leading-8 text-base sm:text-lg">
+            {product.description}
+          </p>
+
+          {/* Add to Cart */}
+          <Button
+            onClick={() => addToCart(product)}
+            className="mt-8 w-full sm:w-auto bg-[#0E1733] hover:bg-[#1b2958] text-white px-10 py-6 text-base font-semibold"
+          >
+            Add to Cart
+          </Button>
+        </div>
       </div>
     </div>
   );
