@@ -37,10 +37,10 @@ function Footer() {
           </h3>
 
           <p className="text-sm text-gray-300">
-            Email: support@wamorgan.com
+            Email: wamorgan@gmail.com
           </p>
           <p className="text-sm text-gray-300">
-            Phone: +254 700 000 000
+            Phone: +254 704 019 505
           </p>
         </div>
 

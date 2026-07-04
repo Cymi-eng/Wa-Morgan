@@ -1,18 +1,139 @@
-# React + Vite
+# Wa-Morgan 
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Wa-Morgan** is a modern e-commerce web application built with React and Vite. It delivers a seamless shopping experience — browsing products, searching for items, viewing detailed product information, registering and logging in, and managing a shopping cart — all through an intuitive, responsive interface.
 
-Currently, two official plugins are available:
+The project showcases React component architecture, React Router for client-side navigation, Context API for state management, REST API integration, and modern UI development with Tailwind CSS and shadcn/ui.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+## Project Overview
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+The primary objective of Wa-Morgan is to simulate the functionality of a modern online clothing store while following React development best practices. The application emphasizes reusable components, responsive layouts, and a clean user experience.
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the Oxlint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+| Category | Feature |
+|---|---|
+| **Shopping** | Responsive homepage, product listing, live product search, individual product details page |
+| **Cart** | Shopping cart functionality with global state via Context API |
+| **Auth** | User registration and login |
+| **Navigation** | Dynamic routing with React Router, responsive navbar and footer |
+| **UI** | Modern, responsive interface built with Tailwind CSS and shadcn/ui |
+
+---
+
+
+## Project Structure
+
+```text
+src/
+│
+├── components/
+│   ├── Navbar.jsx
+│   ├── Footer.jsx
+│   ├── Home.jsx
+│   ├── ProductCard.jsx
+│   ├── ProductList.jsx
+│   └── Cart.jsx
+│
+├── context/
+│   ├── AuthContext.jsx
+│   └── CartContext.jsx
+│
+├── pages/
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   └── ProductDetails.jsx
+│
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+---
+
+## Installation
+
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Cymi-eng/Wa-Morgan.git
+   ```
+
+2. Navigate into the project directory:
+   ```bash
+   cd Wa-Morgan
+   ```
+
+3. Install all required dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## Data Source
+
+Product information is retrieved from the [Fake Store API](https://fakestoreapi.com/).
+
+---
+
+## Application Workflow
+
+1. Users visit the homepage.
+2. Browse available clothing products.
+3. Search for products by name.
+4. View detailed product information.
+5. Add products to the shopping cart.
+6. Register or log into an account.
+7. Proceed to checkout *(future implementation)*.
+
+---
+
+## Current Status
+
+The following modules have been completed:
+
+- ✅ Homepage
+- ✅ Navigation
+- ✅ Product listing
+- ✅ Product search
+- ✅ Product details
+- ✅ Shopping cart
+- ✅ User authentication interface
+- ✅ Footer
+- ✅ Responsive layout
+
+---
+
+
+## Learning Objectives
+
+This project demonstrates practical knowledge of:
+
+- React component architecture
+- State management using Context API
+- Client-side routing
+- REST API integration
+- Responsive web design
+- Reusable UI components
+- Modern frontend development practices
+
+---
+
+## Author
+
+**Ian Cymi**
+GitHub: [@Cymi-eng](https://github.com/Cymi-eng)
+
+---
+
+## License
+
+This project is under the MIT License

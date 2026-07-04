@@ -63,7 +63,7 @@ function Navbar() {
           </Button>
 
           {/* Auth buttons */}
-          <Button variant="outline" asChild>
+          <Button variant="outline text-white" asChild>
             <Link to="/login">
               Login
             </Link>
