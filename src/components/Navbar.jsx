@@ -16,11 +16,13 @@ function Navbar() {
   const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "Men", path: "/products?category=men" },
-    { name: "Women", path: "/products?category=women" },
-  ];
+  { name: "Home", path: "/" },
+  { name: "New Arrivals", path: "/products" },
+  { name: "Men", path: "/products?category=men" },
+  { name: "Women", path: "/products?category=women" },
+  { name: "Accessories", path: "/products?category=accessories" },
+];
+
 
   return (
     <header className="sticky top-0 z-50 bg-[#0E1733] shadow-md">

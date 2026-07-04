@@ -15,11 +15,11 @@ function ProductDetails() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`https://fakestoreapi.com/products/${id}`);
+        const res = await fetch(`https://dummyjson.com/products/${id}`);
         const data = await res.json();
         setProduct(data);
       } catch (err) {
-        console.log("Error loading product:", err);
+        console.error("Error loading product:", err);
       } finally {
         setLoading(false);
       }
@@ -36,9 +36,11 @@ function ProductDetails() {
     );
   }
 
-  if (!product) {
+  if (!product || product.message) {
     return (
-      <div className="text-center py-20 text-gray-500">Product not found.</div>
+      <div className="text-center py-20 text-gray-500">
+        Product not found.
+      </div>
     );
   }
 
@@ -48,7 +50,7 @@ function ProductDetails() {
         {/* Product Image */}
         <div className="bg-[#0E1733]/5 rounded-2xl p-6 sm:p-10 flex justify-center items-center">
           <img
-            src={product.image}
+            src={product.images?.[0] || product.thumbnail}
             alt={product.title}
             className="h-64 sm:h-80 md:h-96 object-contain transition-transform duration-300 hover:scale-105"
           />
@@ -64,20 +66,38 @@ function ProductDetails() {
             ${product.price}
           </p>
 
+          {/* Brand & Category */}
+          <div className="mt-4 flex flex-wrap gap-3">
+            <span className="bg-[#0E1733]/10 text-[#0E1733] px-3 py-1 rounded-full text-sm">
+              Brand: {product.brand}
+            </span>
+
+            <span className="bg-[#F98603]/10 text-[#F98603] px-3 py-1 rounded-full text-sm capitalize">
+              {product.category}
+            </span>
+          </div>
+
           {/* Rating */}
-          <div className="flex items-center gap-2 mt-4">
+          <div className="flex items-center gap-2 mt-6">
             <Star className="h-5 w-5 fill-[#F98603] text-[#F98603]" />
 
-            <span className="font-medium">{product.rating.rate}</span>
+            <span className="font-medium">
+              {product.rating.toFixed(1)}
+            </span>
 
             <span className="text-gray-500">
-              ({product.rating.count} reviews)
+              ({product.reviews?.length || 0} reviews)
             </span>
           </div>
 
           {/* Description */}
           <p className="mt-6 text-gray-600 leading-8 text-base sm:text-lg">
             {product.description}
+          </p>
+
+          {/* Stock */}
+          <p className="mt-4 text-green-600 font-medium">
+            In Stock: {product.stock} items
           </p>
 
           {/* Add to Cart */}

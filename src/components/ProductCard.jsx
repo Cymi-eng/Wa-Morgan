@@ -21,7 +21,7 @@ function ProductCard({ product }) {
       {/* Product Image */}
       <div className="h-64 flex items-center justify-center bg-[#0E1733]/5 p-4">
         <img
-          src={product.image}
+          src={product.thumbnail}
           alt={product.title}
           className="h-full object-contain transition-transform duration-300 hover:scale-105"
         />
@@ -37,10 +37,22 @@ function ProductCard({ product }) {
           ${product.price}
         </p>
 
+        {/* Brand */}
+        <p className="text-sm text-gray-500">
+          {product.brand}
+        </p>
+
+        {/* Rating */}
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Star className="h-4 w-4 fill-[#F98603] text-[#F98603]" />
-          <span className="font-medium">{product.rating.rate}</span>
-          <span>({product.rating.count} reviews)</span>
+
+          <span className="font-medium">
+            {product.rating.toFixed(1)}
+          </span>
+
+          <span>
+            ({product.reviews?.length || 0} reviews)
+          </span>
         </div>
       </CardContent>
 
@@ -57,7 +69,8 @@ function ProductCard({ product }) {
         </Button>
 
         <Button
-          className="flex-1 border-[#F98603] text-[#F98603] hover:bg-[#F98603] hover:text-[#0E1733]"
+          className="flex-1 border border-[#F98603] text-[#F98603] hover:bg-[#F98603] hover:text-[#0E1733]"
+          variant="outline"
           onClick={() => addToCart(product)}
         >
           Add to Cart

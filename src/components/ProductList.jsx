@@ -1,22 +1,24 @@
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("https://fakestoreapi.com/products");
+        const res = await fetch("https://dummyjson.com/products?limit=100");
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products);
       } catch (error) {
-        console.log("Error fetching products:", error);
+        console.error("Error fetching products:", error);
       } finally {
         setLoading(false);
       }
@@ -25,40 +27,49 @@ function ProductList() {
     fetchProducts();
   }, []);
 
-  // 🔍 SEARCH FILTER LOGIC
+  // Search & Category Filter
   const filteredProducts = products.filter((product) => {
-  // Search filter
-  const matchesSearch = product.title
-    .toLowerCase()
-    .includes(search.toLowerCase());
+    const matchesSearch = product.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-  // Category filter
-  let matchesCategory = true;
+    let matchesCategory = true;
 
-  if (category === "men") {
-    matchesCategory = product.category === "men's clothing";
-  }
+    if (category === "men") {
+      matchesCategory = [
+        "mens-shirts",
+        "mens-shoes",
+        "mens-watches",
+      ].includes(product.category);
+    }
 
-  if (category === "women") {
-    matchesCategory = product.category === "women's clothing";
-  }
+    if (category === "women") {
+      matchesCategory = [
+        "womens-dresses",
+        "womens-shoes",
+        "womens-bags",
+        "womens-jewellery",
+        "tops",
+        "sunglasses",
+      ].includes(product.category);
+    }
 
-  return matchesSearch && matchesCategory;
-});
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
 
-      {/* PAGE TITLE */}
+      {/* Page Title */}
       <h1 className="text-3xl font-bold text-[#0E1733] mb-6">
-  {category === "men"
-    ? "Men's Collection"
-    : category === "women"
-    ? "Women's Collection"
-    : "Our Products"}
-</h1>
+        {category === "men"
+          ? "Men's Collection"
+          : category === "women"
+          ? "Women's Collection"
+          : "Our Products"}
+      </h1>
 
-      {/* SEARCH BAR */}
+      {/* Search */}
       <input
         type="text"
         placeholder="Search products..."
@@ -67,25 +78,24 @@ function ProductList() {
         className="w-full md:w-1/2 mb-8 p-3 border border-[#0E1733]/20 rounded-md focus:outline-none focus:border-[#F98603] focus:ring-1 focus:ring-[#F98603]"
       />
 
-      {/* LOADING STATE */}
+      {/* Loading */}
       {loading ? (
-        <p className="text-gray-500">Loading products...</p>
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="h-10 w-10 animate-spin text-[#F98603]" />
+        </div>
+      ) : filteredProducts.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">
+          No products found.
+        </p>
       ) : (
-        <>
-          {/* NO RESULTS */}
-          {filteredProducts.length === 0 ? (
-            <p className="text-gray-500">
-              No products found for "{search}"
-            </p>
-          ) : (
-            /* PRODUCT GRID */
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+        </div>
       )}
 
     </div>
