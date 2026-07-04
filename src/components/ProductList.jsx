@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,17 +26,37 @@ function ProductList() {
   }, []);
 
   // 🔍 SEARCH FILTER LOGIC
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+  // Search filter
+  const matchesSearch = product.title
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  // Category filter
+  let matchesCategory = true;
+
+  if (category === "men") {
+    matchesCategory = product.category === "men's clothing";
+  }
+
+  if (category === "women") {
+    matchesCategory = product.category === "women's clothing";
+  }
+
+  return matchesSearch && matchesCategory;
+});
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
 
       {/* PAGE TITLE */}
       <h1 className="text-3xl font-bold text-[#0E1733] mb-6">
-        Our Products
-      </h1>
+  {category === "men"
+    ? "Men's Collection"
+    : category === "women"
+    ? "Women's Collection"
+    : "Our Products"}
+</h1>
 
       {/* SEARCH BAR */}
       <input

@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const { cart } = useContext(CartContext);
   const { user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
 
   const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
@@ -34,19 +36,23 @@ function Navbar() {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-[#F98603] font-semibold border-b-2 border-[#F98603] pb-1"
-                  : "text-white hover:text-[#F98603] transition"
-              }
-            >
-              {link.name}
-            </NavLink>
-          ))}
+          {navLinks.map((link) => {
+            const active = location.pathname + location.search === link.path;
+
+            return (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={
+                  active
+                    ? "text-[#F98603] font-semibold border-b-2 border-[#F98603] pb-1"
+                    : "text-white hover:text-[#F98603] transition"
+                }
+              >
+                {link.name}
+              </NavLink>
+            );
+          })}
         </nav>
 
         {/* Right Side */}
