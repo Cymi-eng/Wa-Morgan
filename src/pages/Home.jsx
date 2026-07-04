@@ -27,7 +27,7 @@ function Home() {
             <Button
               asChild
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-[#0E1733] w-full sm:w-auto"
+              className="border-white text-[#0E1733]"
             >
               <Link to="/products?category=women">Explore Categories</Link>
             </Button>
