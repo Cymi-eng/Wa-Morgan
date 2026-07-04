@@ -1,11 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
-import { useContext } from "react";
 import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CartContext } from "../context/CartContext";
+import { useContext } from "react";
+import { CartContext } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 function Navbar() {
   const { cart } = useContext(CartContext);
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -15,30 +19,29 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0E1733] text-white border-b border-white/10 shadow-md">
+    <header className="sticky top-0 z-50 bg-[#0E1733] shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
-
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <ShoppingBag className="h-7 w-7" />
+        <Link to="/" className="flex items-center gap-2 text-white">
+          <ShoppingBag className="h-7 w-7 text-[#F98603]" />
+
           <div>
-            <h1 className="text-xl font-bold text-[#F98603]">Wa-Morgan</h1>
-            <p className="text-xs text-gray-500">
-              Dress Better. Live Better.
-            </p>
+            <h1 className="text-xl font-bold">Wa-Morgan</h1>
+
+            <p className="text-xs text-gray-300">Dress Better. Live Better.</p>
           </div>
         </Link>
 
         {/* Navigation */}
-        <nav className="flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               className={({ isActive }) =>
                 isActive
-                  ? "font-semibold text-[#F98603] border-b-2 border-[#F98603] pb-1"
-                  : "text-gray-300 hover:text-[#F98603] transition"
+                  ? "text-[#F98603] font-semibold border-b-2 border-[#F98603] pb-1"
+                  : "text-white hover:text-[#F98603] transition"
               }
             >
               {link.name}
@@ -47,36 +50,50 @@ function Navbar() {
         </nav>
 
         {/* Right Side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          {/* Cart */}
+          <Link to="/cart" className="relative text-white hover:text-[#F98603]">
+            <ShoppingCart className="h-6 w-6" />
 
-          {/* Cart with badge */}
-          <Button variant="ghost" asChild className="relative">
-            <Link to="/cart">
-              <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </Link>
 
-              {cart.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                  {cart.length}
-                </span>
-              )}
-            </Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <span className="text-white font-medium">
+                Welcome, <span className="text-[#F98603]">{user?.name}</span>
+              </span>
 
-          {/* Auth buttons */}
-          <Button variant="outline text-white" asChild>
-            <Link to="/login">
-              Login
-            </Link>
-          </Button>
+              <Button
+                onClick={logout}
+                className="bg-[#F98603] hover:bg-[#e67d00] text-[#0E1733] font-semibold"
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                asChild
+                className="border-[#F98603] text-[#F98603] hover:bg-[#F98603] hover:text-[#0E1733]"
+              >
+                <Link to="/login">Login</Link>
+              </Button>
 
-          <Button asChild>
-            <Link to="/register">
-              Register
-            </Link>
-          </Button>
-
+              <Button
+                asChild
+                className="bg-[#F98603] hover:bg-[#e67d00] text-[#0E1733] font-semibold"
+              >
+                <Link to="/register">Register</Link>
+              </Button>
+            </>
+          )}
         </div>
-
       </div>
     </header>
   );

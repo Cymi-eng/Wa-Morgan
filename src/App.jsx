@@ -8,6 +8,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import ProductDetails from "./pages/ProductDetail";
+import Checkout from "./pages/Checkout";
+import Success from "./pages/Success";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -23,6 +26,10 @@ function App() {
         {/* Products */}
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/checkout" element={<ProtectedRoute> <Checkout /></ProtectedRoute>
+  }
+/>
 
         {/* Cart */}
         <Route path="/cart" element={<Cart />} />
