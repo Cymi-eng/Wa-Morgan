@@ -35,6 +35,8 @@ src/
 │   ├── Home.jsx
 │   ├── ProductCard.jsx
 │   ├── ProductList.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── SearchBart.jsx
 │   └── Cart.jsx
 │
 ├── context/
@@ -42,6 +44,9 @@ src/
 │   └── CartContext.jsx
 │
 ├── pages/
+│   ├── Home.jsx
+│   ├── Checkout.jsx
+│   ├── Succes.jsx
 │   ├── Login.jsx
 │   ├── Register.jsx
 │   └── ProductDetails.jsx
