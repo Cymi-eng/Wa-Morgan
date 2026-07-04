@@ -1,105 +1,195 @@
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CartContext } from '@/context/CartContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { CreditCard, Wallet, Truck } from 'lucide-react'; // Added icons for visual polish
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CartContext } from "@/context/CartContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { CreditCard, Wallet, Truck } from "lucide-react";
 
 export default function Checkout() {
   const { cart, setCart } = useContext(CartContext);
   const navigate = useNavigate();
-  
-  // State for text inputs
-  const [formData, setFormData] = useState({ name: '', email: '', address: '' });
-  
-  // State tracking the chosen payment mode and explicit method requirements
-  const [paymentMethod, setPaymentMethod] = useState('mpesa');
-  const [mpesaPhone, setMpesaPhone] = useState('');
-  const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvc: '' });
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+  // Shipping Details
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    address: "",
+  });
+
+  // Error Message
+  const [error, setError] = useState("");
+
+  // Payment Method
+  const [paymentMethod, setPaymentMethod] = useState("mpesa");
+
+  // M-Pesa
+  const [mpesaPhone, setMpesaPhone] = useState("");
+
+  // Card Details
+  const [cardDetails, setCardDetails] = useState({
+    number: "",
+    expiry: "",
+    cvc: "",
+  });
+
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + item.price * (item.quantity || 1),
+    0,
+  );
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.address) return alert("Please fill out all shipping fields.");
-    
-    // Validate conditional payment requirements
-    if (paymentMethod === 'mpesa' && !mpesaPhone) return alert("Please enter your M-Pesa phone number.");
-    if (paymentMethod === 'card' && (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvc)) {
-      return alert("Please fill out all card fields.");
+
+    setError("");
+
+    // Shipping Validation
+    if (!formData.name || !formData.email || !formData.address) {
+      setError("Please fill in all shipping details.");
+      return;
     }
-    
-    // Assemble final order payload for your backend pipeline
+
+    // M-Pesa Validation
+    if (paymentMethod === "mpesa" && !mpesaPhone) {
+      setError("Please enter your M-Pesa phone number.");
+      return;
+    }
+
+    // Card Validation
+    if (
+      paymentMethod === "card" &&
+      (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvc)
+    ) {
+      setError("Please complete all card details.");
+      return;
+    }
+
     const orderPayload = {
       shipping: formData,
       payment: {
         method: paymentMethod,
-        details: paymentMethod === 'mpesa' ? { mpesaPhone } : paymentMethod === 'card' ? cardDetails : null
+        details:
+          paymentMethod === "mpesa"
+            ? { mpesaPhone }
+            : paymentMethod === "card"
+              ? cardDetails
+              : null,
       },
       items: cart,
-      total: totalPrice
+      total: totalPrice,
     };
 
-    console.log("Processing Order Data Pipeline:", orderPayload);
-    
-    setCart([]); // Clear the cart globally upon success
-    navigate('/success'); // Redirect to order confirmation
+    console.log("Order Submitted:", orderPayload);
+
+    // Clear Cart
+    setCart([]);
+
+    // Redirect
+    navigate("/success");
   };
 
   if (cart.length === 0) {
     return (
       <div className="container max-w-md mx-auto text-center py-12 space-y-4">
-        <p className="text-muted-foreground">Your cart is empty. Cannot checkout.</p>
-        <Button onClick={() => navigate('/')}>Go to Catalog</Button>
+        <p className="text-gray-500">Your cart is empty. Cannot checkout.</p>
+
+        <Button
+          onClick={() => navigate("/")}
+          className="bg-[#F98603] hover:bg-[#e57f03] text-[#0E1733]"
+        >
+          Continue Shopping
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl grid md:grid-cols-2 gap-6">
-      {/* Left Column: Shipping & Payment Options Form */}
+    <div className="container mx-auto max-w-5xl p-6 grid md:grid-cols-2 gap-8">
+      {/* LEFT COLUMN */}
       <form onSubmit={handlePlaceOrder} className="space-y-6">
-        {/* Shipping Card */}
+        {/* SHIPPING DETAILS */}
         <Card>
-          <CardHeader>
+          <CardHeader className="bg-[#0E1733] text-white rounded-t-lg">
             <CardTitle>Shipping Details</CardTitle>
-            <CardDescription>Enter your delivery information below.</CardDescription>
+            <CardDescription className="text-gray-300">
+              Enter your delivery information below
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+
+          <CardContent className="space-y-4 pt-6">
+            {error && (
+              <div className="rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+
             <div className="space-y-1">
               <label className="text-xs font-medium">Full Name</label>
-              <Input name="name" required value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+              <Input
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="John Doe"
+              />
             </div>
+
             <div className="space-y-1">
               <label className="text-xs font-medium">Email Address</label>
-              <Input type="email" name="email" required value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="john@example.com"
+              />
             </div>
+
             <div className="space-y-1">
               <label className="text-xs font-medium">Delivery Address</label>
-              <Input name="address" required value={formData.address} onChange={handleInputChange} placeholder="123 Market St, Nairobi" />
+              <Input
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                placeholder="123 Market St, Nairobi"
+              />
             </div>
           </CardContent>
         </Card>
 
-        {/* Payment Methods Selection Card */}
+        {/* PAYMENT METHODS */}
         <Card>
-          <CardHeader>
+          <CardHeader className="bg-[#0E1733] text-white rounded-t-lg">
             <CardTitle>Payment Method</CardTitle>
-            <CardDescription>Select your preferred mode of payment.</CardDescription>
+            <CardDescription className="text-gray-300">
+              Select your preferred payment option
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Payment Method Selector Grid */}
+
+          <CardContent className="space-y-4 pt-6">
             <div className="grid grid-cols-3 gap-2">
               <Button
                 type="button"
-                variant={paymentMethod === 'mpesa' ? 'default' : 'outline'}
-                className="flex flex-col h-16 items-center justify-center gap-1 text-xs"
-                onClick={() => setPaymentMethod('mpesa')}
+                variant="outline"
+                onClick={() => setPaymentMethod("mpesa")}
+                className={`h-16 flex flex-col gap-1 ${
+                  paymentMethod === "mpesa"
+                    ? "bg-[#F98603] text-[#0E1733] border-[#F98603]"
+                    : ""
+                }`}
               >
                 <Wallet className="h-4 w-4" />
                 <span>M-Pesa</span>
@@ -107,9 +197,13 @@ export default function Checkout() {
 
               <Button
                 type="button"
-                variant={paymentMethod === 'card' ? 'default' : 'outline'}
-                className="flex flex-col h-16 items-center justify-center gap-1 text-xs"
-                onClick={() => setPaymentMethod('card')}
+                variant="outline"
+                onClick={() => setPaymentMethod("card")}
+                className={`h-16 flex flex-col gap-1 ${
+                  paymentMethod === "card"
+                    ? "bg-[#F98603] text-[#0E1733] border-[#F98603]"
+                    : ""
+                }`}
               >
                 <CreditCard className="h-4 w-4" />
                 <span>Card</span>
@@ -117,89 +211,117 @@ export default function Checkout() {
 
               <Button
                 type="button"
-                variant={paymentMethod === 'cod' ? 'default' : 'outline'}
-                className="flex flex-col h-16 items-center justify-center gap-1 text-xs"
-                onClick={() => setPaymentMethod('cod')}
+                variant="outline"
+                onClick={() => setPaymentMethod("cod")}
+                className={`h-16 flex flex-col gap-1 ${
+                  paymentMethod === "cod"
+                    ? "bg-[#F98603] text-[#0E1733] border-[#F98603]"
+                    : ""
+                }`}
               >
                 <Truck className="h-4 w-4" />
                 <span>C.O.D</span>
               </Button>
             </div>
 
-            {/* Conditional Sub-forms depending on the active selection */}
-            {paymentMethod === 'mpesa' && (
-              <div className="space-y-1 p-3 border rounded-lg bg-muted/30 animate-in fade-in duration-200">
-                <label className="text-xs font-medium">M-Pesa Phone Number</label>
-                <Input 
-                  type="tel" 
-                  placeholder="e.g. 0712345678" 
+            {/* MPESA */}
+            {paymentMethod === "mpesa" && (
+              <div className="space-y-2 p-4 border rounded-lg">
+                <label className="text-xs font-medium">
+                  M-Pesa Phone Number
+                </label>
+
+                <Input
+                  type="tel"
+                  placeholder="0712345678"
                   value={mpesaPhone}
                   onChange={(e) => setMpesaPhone(e.target.value)}
                 />
-                <span className="text-[10px] text-muted-foreground">You will receive an STK prompt directly to this phone number.</span>
               </div>
             )}
 
-            {paymentMethod === 'card' && (
-              <div className="space-y-3 p-3 border rounded-lg bg-muted/30 animate-in fade-in duration-200">
-                <div className="space-y-1">
-                  <label className="text-xs font-medium">Card Number</label>
-                  <Input 
-                    placeholder="1234 5678 1234 5678"
-                    value={cardDetails.number}
-                    onChange={(e) => setCardDetails({...cardDetails, number: e.target.value})}
+            {/* CARD */}
+            {paymentMethod === "card" && (
+              <div className="space-y-3 p-4 border rounded-lg">
+                <Input
+                  placeholder="Card Number"
+                  value={cardDetails.number}
+                  onChange={(e) =>
+                    setCardDetails({
+                      ...cardDetails,
+                      number: e.target.value,
+                    })
+                  }
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    placeholder="MM/YY"
+                    value={cardDetails.expiry}
+                    onChange={(e) =>
+                      setCardDetails({
+                        ...cardDetails,
+                        expiry: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Input
+                    placeholder="CVC"
+                    value={cardDetails.cvc}
+                    onChange={(e) =>
+                      setCardDetails({
+                        ...cardDetails,
+                        cvc: e.target.value,
+                      })
+                    }
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium">Expiry</label>
-                    <Input 
-                      placeholder="MM/YY"
-                      value={cardDetails.expiry}
-                      onChange={(e) => setCardDetails({...cardDetails, expiry: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium">CVC</label>
-                    <Input 
-                      placeholder="123"
-                      value={cardDetails.cvc}
-                      onChange={(e) => setCardDetails({...cardDetails, cvc: e.target.value})}
-                    />
-                  </div>
-                </div>
               </div>
             )}
 
-            {paymentMethod === 'cod' && (
-              <div className="p-3 border border-dashed rounded-lg bg-muted/30 text-xs text-muted-foreground">
-                Pay with cash or mobile money upon receiving your package at your doorstep.
+            {/* CASH ON DELIVERY */}
+            {paymentMethod === "cod" && (
+              <div className="p-4 border rounded-lg text-sm text-gray-600">
+                Pay when your order is delivered.
               </div>
             )}
           </CardContent>
+
           <CardFooter>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full bg-[#F98603] hover:bg-[#e57f03] text-[#0E1733] font-semibold"
+            >
               Place Order (Ksh. {totalPrice.toFixed(2)})
             </Button>
           </CardFooter>
         </Card>
       </form>
 
-      {/* Right Column: Order Summary */}
+      {/* ORDER SUMMARY */}
       <Card className="h-fit">
-        <CardHeader>
+        <CardHeader className="bg-[#0E1733] text-white rounded-t-lg">
           <CardTitle>Order Summary</CardTitle>
         </CardHeader>
-        <CardContent className="divide-y divide-border text-sm">
+
+        <CardContent className="divide-y divide-border text-sm pt-4">
           {cart.map((item) => (
-            <div key={item.id} className="flex justify-between py-2">
-              <span className="text-muted-foreground">{item.name} <strong className="text-foreground">x{item.quantity || 1}</strong></span>
-              <span className="font-medium">Ksh. {(item.price * (item.quantity || 1)).toFixed(2)}</span>
+            <div key={item.id} className="flex justify-between py-3">
+              <span>
+                {item.title}
+                <strong> x{item.quantity || 1}</strong>
+              </span>
+
+              <span className="font-medium text-[#F98603]">
+                Ksh. {(item.price * (item.quantity || 1)).toFixed(2)}
+              </span>
             </div>
           ))}
-          <div className="flex justify-between font-bold text-base pt-4 mt-2">
-            <span>Total:</span>
-            <span>Ksh. {totalPrice.toFixed(2)}</span>
+
+          <div className="flex justify-between font-bold text-lg pt-4">
+            <span>Total</span>
+            <span className="text-[#F98603]">Ksh. {totalPrice.toFixed(2)}</span>
           </div>
         </CardContent>
       </Card>
